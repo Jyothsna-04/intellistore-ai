@@ -1,0 +1,220 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: intellistore-db
+    restart: unless-stopped
+    env_file: .env.local
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-intellistore}
+      POSTGRES_USER: ${POSTGRES_USER:-intellistore_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - intellistore-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-intellistore_user} -d ${POSTGRES_DB:-intellistore}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  minio:
+    image: minio/minio:latest
+    container_name: intellistore-minio
+    restart: unless-stopped
+    env_file: .env.local
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+    networks:
+      - intellistore-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  minio-setup:
+    image: minio/mc:latest
+    container_name: intellistore-minio-setup
+    env_file: .env.local
+    depends_on:
+      minio:
+        condition: service_healthy
+    networks:
+      - intellistore-net
+    entrypoint: >
+      /bin/sh -c "
+      echo 'Waiting for MinIO...' &&
+      sleep 5 &&
+      mc alias set local http://minio:9000 ${MINIO_ROOT_USER:-minioadmin} ${MINIO_ROOT_PASSWORD:-minioadmin} &&
+      mc mb local/${MINIO_BUCKET_FILES:-files} --ignore-existing &&
+      mc mb local/${MINIO_BUCKET_QUARANTINE:-quarantine} --ignore-existing &&
+      mc anonymous set public local/${MINIO_BUCKET_FILES:-files} &&
+      echo 'MinIO buckets created.'
+      "
+
+  redis:
+    image: redis:7-alpine
+    container_name: intellistore-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    networks:
+      - intellistore-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: intellistore-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrantdata:/qdrant/storage
+    networks:
+      - intellistore-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  clamav:
+    image: mkodockx/docker-clamav:alpine
+    container_name: intellistore-clamav
+    restart: unless-stopped
+    ports:
+      - "3310:3310"
+    networks:
+      - intellistore-net
+    healthcheck:
+      test: ["CMD", "echo", "PING", "|", "nc", "localhost", "3310"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: intellistore-mailpit
+    restart: unless-stopped
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Web UI
+    networks:
+      - intellistore-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8025/api/v1/info"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: intellistore-backend
+    restart: unless-stopped
+    env_file: .env.local
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-intellistore}
+      DB_USER: ${POSTGRES_USER:-intellistore_user}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      MINIO_URL: http://minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      MINIO_BUCKET: ${MINIO_BUCKET_FILES:-files}
+      MINIO_QUARANTINE_BUCKET: ${MINIO_BUCKET_QUARANTINE:-quarantine}
+      CLAMD_HOST: clamav
+      CLAMD_PORT: 3310
+      JWT_SECRET: ${JWT_SECRET:-changeme}
+      FILE_ENCRYPTION_KEY: ${FILE_ENCRYPTION_KEY:-changeme}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      clamav:
+        condition: service_healthy
+    networks:
+      - intellistore-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: intellistore-ai-service
+    restart: unless-stopped
+    env_file: .env.local
+    environment:
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: 6333
+      AI_EMBEDDING_PROVIDER: ${AI_EMBEDDING_PROVIDER:-local}
+      AI_EMBEDDING_API_KEY: ${AI_EMBEDDING_API_KEY:-}
+    ports:
+      - "8000:8000"
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    networks:
+      - intellistore-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: intellistore-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - intellistore-net
+
+volumes:
+  pgdata:
+  miniodata:
+  redisdata:
+  qdrantdata:
+
+networks:
+  intellistore-net:
+    driver: bridge

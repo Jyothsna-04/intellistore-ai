@@ -1,0 +1,348 @@
+project:
+  name: IntelliStore AI
+  description: Enterprise Cloud Storage Optimizer powered by Agentic AI
+  version: 0.1.0
+  status: active
+  active_milestone: 1
+  active_branch: feature/authentication
+
+metadata:
+  created: "2026-07-02"
+  repository: intellistore-ai
+  license: MIT
+  authors:
+    - role: Lead Engineer
+  tags:
+    - enterprise
+    - cloud-storage
+    - agentic-ai
+    - saas
+
+release:
+  current: v0.1.0
+  next: v0.2.0
+  strategy: semantic-versioning
+  roadmap:
+    - version: v0.1.0
+      milestone: Sprint 0
+      name: Project Foundation
+    - version: v0.2.0
+      milestone: Milestone 1
+      name: Authentication & User Management
+    - version: v0.3.0
+      milestone: Milestone 2
+      name: Enterprise Storage Management
+    - version: v0.4.0
+      milestone: Milestone 3
+      name: Enterprise Dashboard
+    - version: v0.5.0
+      milestone: Milestone 4
+      name: Search & Metadata Engine
+    - version: v0.6.0
+      milestone: Milestone 5
+      name: Sharing & Collaboration
+    - version: v0.7.0
+      milestone: Milestone 6
+      name: Analytics & Reports
+    - version: v0.8.0
+      milestone: Milestone 7
+      name: Notification System
+    - version: v0.9.0
+      milestone: Milestone 8
+      name: AI Foundation
+    - version: v1.0.0
+      milestone: Milestone 9
+      name: AI Storage Copilot
+    - version: v1.1.0
+      milestone: Milestone 10
+      name: Enterprise Administration
+    - version: v1.2.0
+      milestone: Milestone 11
+      name: Production Hardening
+    - version: v2.0.0
+      milestone: Milestone 12
+      name: Enterprise Release
+
+services:
+  frontend:
+    name: intellistore-frontend
+    framework: React
+    language: TypeScript
+    port: 5173
+    port_production: 3000
+    dockerfile: frontend/Dockerfile
+    build_command: "npm run build"
+    dev_command: "npm run dev"
+    env_file: frontend/.env
+
+  backend:
+    name: intellistore-backend
+    framework: Spring Boot
+    language: Java
+    version: "17"
+    port: 8080
+    dockerfile: backend/Dockerfile
+    build_command: "mvn clean package -DskipTests"
+    dev_command: "mvn spring-boot:run"
+    env_file: backend/.env
+    health_check: "/actuator/health"
+
+  ai_service:
+    name: intellistore-ai
+    framework: FastAPI
+    language: Python
+    version: "3.11"
+    port: 8000
+    dockerfile: ai-service/Dockerfile
+    build_command: "pip install -r requirements.txt"
+    dev_command: "uvicorn app.main:app --reload"
+    env_file: ai-service/.env
+    health_check: "/health"
+
+infrastructure:
+  database:
+    provider: PostgreSQL
+    version: "16"
+    port: 5432
+    name: intellistore
+    migrations: Flyway
+    migration_path: backend/src/main/resources/db/migration
+
+  object_storage:
+    provider: MinIO
+    version: latest
+    port_api: 9000
+    port_console: 9001
+    bucket: intellistore
+    s3_compatible: true
+    future_migration: AWS S3
+
+  cache:
+    provider: Redis
+    version: "7"
+    port: 6379
+    use_cases:
+      - JWT token blacklist
+      - Rate limiting (future)
+      - Session cache (future)
+      - AI response cache (future)
+
+  reverse_proxy:
+    provider: Nginx
+    port_http: 80
+    port_https: 443
+    routes:
+      - path: /api
+        upstream: backend:8080
+      - path: /ai
+        upstream: ai-service:8000
+      - path: /
+        upstream: frontend:3000
+
+tech_stack:
+  frontend:
+    - name: React
+      version: "18.3"
+      purpose: UI Framework
+    - name: TypeScript
+      version: "5.6"
+      purpose: Type Safety
+    - name: Tailwind CSS
+      version: "3.4"
+      purpose: Styling
+    - name: React Router
+      version: "6"
+      purpose: Client-Side Routing
+    - name: Recharts
+      version: "2.12"
+      purpose: Data Visualization
+    - name: Axios
+      version: "1.7"
+      purpose: HTTP Client
+    - name: React Query
+      version: "5"
+      purpose: Server State Management
+    - name: Lucide React
+      version: latest
+      purpose: Icon Library
+    - name: React Dropzone
+      version: "14"
+      purpose: File Upload
+
+  backend:
+    - name: Spring Boot
+      version: "3.3.4"
+      purpose: Enterprise REST API Framework
+    - name: Spring Security
+      version: "6.3"
+      purpose: Authentication & Authorization
+    - name: Spring Data JPA
+      version: "3.3"
+      purpose: Database ORM
+    - name: Flyway
+      version: "10"
+      purpose: Database Migrations
+    - name: JJWT
+      version: "0.12.3"
+      purpose: JWT Token Management
+    - name: Bucket4j
+      version: "8.10"
+      purpose: Rate Limiting
+    - name: MinIO Java SDK
+      version: "8.5"
+      purpose: Object Storage Client
+    - name: Apache Tika
+      version: "2.9"
+      purpose: MIME Type Detection
+    - name: Lombok
+      version: latest
+      purpose: Boilerplate Reduction
+
+  ai:
+    - name: FastAPI
+      version: "0.115"
+      purpose: AI Service API
+    - name: LangGraph
+      version: latest
+      purpose: Agent Orchestration
+    - name: LangChain
+      version: latest
+      purpose: LLM Abstraction
+    - name: Sentence Transformers
+      version: latest
+      purpose: Text Embeddings
+    - name: OpenAI
+      version: "1.x"
+      purpose: Primary LLM Provider
+    - name: Ollama
+      version: latest
+      purpose: Local LLM Fallback
+
+  database:
+    - name: PostgreSQL
+      version: "16"
+      purpose: Primary RDBMS
+
+authentication:
+  method: JWT
+  access_token_ttl: 15m
+  refresh_token_ttl: 7d
+  password_hashing: BCrypt
+  bcrypt_strength: 12
+  rbac: true
+  roles:
+    - ADMIN
+    - MANAGER
+    - EMPLOYEE
+
+features:
+  enabled:
+    - authentication
+  pending:
+    - storage
+    - dashboard
+    - search
+    - sharing
+    - analytics
+    - notifications
+    - ai_copilot
+    - admin
+
+ai_agents:
+  supervisor: Storage Copilot
+  specialists:
+    - Storage Optimization Agent
+    - Duplicate Detection Agent
+    - Archive Recommendation Agent
+    - Cost Optimization Agent
+    - File Classification Agent
+    - Security Agent
+
+environment_variables:
+  required:
+    - DB_URL
+    - DB_USERNAME
+    - DB_PASSWORD
+    - JWT_SECRET
+    - MINIO_ENDPOINT
+    - MINIO_ACCESS_KEY
+    - MINIO_SECRET_KEY
+    - FRONTEND_URL
+  optional:
+    - MAIL_HOST
+    - MAIL_PORT
+    - OPENAI_API_KEY
+    - CORS_ORIGINS
+    - LOG_LEVEL
+    - SERVER_PORT
+
+ports:
+  frontend: 5173
+  backend: 8080
+  ai_service: 8000
+  postgresql: 5432
+  minio_api: 9000
+  minio_console: 9001
+  redis: 6379
+  nginx: 80
+
+documentation:
+  - path: docs/README.md
+    description: Project overview and quick start
+  - path: docs/PROJECT_REQUIREMENTS.md
+    description: Product vision and features
+  - path: docs/GLOBAL_ENGINEERING_STANDARDS.md
+    description: Engineering rules and standards
+  - path: docs/AI_AGENT_SPEC.md
+    description: AI agent architecture
+  - path: docs/ARCHITECTURE.md
+    description: System architecture
+  - path: docs/DATABASE_SCHEMA.md
+    description: Database design
+  - path: docs/API_DOCUMENTATION.md
+    description: REST API reference
+  - path: docs/SECURITY.md
+    description: Security model and threat analysis
+  - path: docs/DEPLOYMENT.md
+    description: Deployment guide
+  - path: docs/TESTING.md
+    description: Testing strategy
+  - path: docs/ROADMAP.md
+    description: Future milestones
+  - path: docs/DECISIONS.md
+    description: Architecture Decision Records
+  - path: docs/KNOWN_ISSUES.md
+    description: Bugs and technical debt
+  - path: docs/CONTRIBUTING.md
+    description: Engineering workflow and DoD
+  - path: docs/CODING_STANDARDS.md
+    description: Language-specific coding standards
+  - path: docs/DEPENDENCIES.md
+    description: Dependency catalog
+  - path: docs/METRICS.md
+    description: Project metrics
+  - path: docs/OBSERVABILITY.md
+    description: Logging, metrics, and tracing plan
+  - path: docs/RISK_REGISTER.md
+    description: Project risk register
+  - path: docs/SPRINT_PLAN.md
+    description: Current sprint plan
+  - path: docs/CHANGELOG.md
+    description: Version history
+  - path: docs/PROJECT_PROGRESS.md
+    description: Milestone progress tracker
+  - path: docs/SCREENSHOTS.md
+    description: UI documentation
+
+deployment:
+  targets:
+    - name: local
+      method: docker-compose
+      command: "docker-compose up -d"
+    - name: production
+      method: docker-compose
+      command: "docker-compose -f docker-compose.prod.yml up -d"
+  compose_files:
+    - docker-compose.yml
+    - docker-compose.dev.yml
+    - docker-compose.prod.yml

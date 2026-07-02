@@ -1,0 +1,32 @@
+# Environments
+.env
+.env.*
+!.env.example
+
+# Build Artifacts & Dependencies
+target/
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+venv/
+.venv/
+*.egg-info/
+.coverage
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS generated files
+.DS_Store
+Thumbs.db
+*.tmp
+*.log

@@ -1,0 +1,46 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:intellistore}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        "[format_sql]": true
+    show-sql: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+
+intellistore:
+  app:
+    jwtSecret: ${JWT_SECRET:89qjw6b2y9asduioqwhne981y23hjaksdnqiweu89123hbnmasd}
+    jwtExpirationMs: 86400000 # 24 hours
+    jwtRefreshExpirationMs: 604800000 # 7 days
+
+minio:
+  url: ${MINIO_URL:http://localhost:9000}
+  access-key: ${MINIO_ACCESS_KEY:minioadmin}
+  secret-key: ${MINIO_SECRET_KEY:minioadmin}
+  bucket-name: ${MINIO_BUCKET:files}
+  bucket:
+    quarantine: ${MINIO_QUARANTINE_BUCKET:quarantine}
+
+clamd:
+  host: ${CLAMD_HOST:localhost}
+  port: ${CLAMD_PORT:3310}
+  timeoutMs: 5000
+
+encryption:
+  # Base64 encoded 256-bit key for AES-GCM
+  key: ${FILE_ENCRYPTION_KEY:1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t1u2v3w4x5y6z7a8b9c0d1e2f}
+server:
+  port: 8080
