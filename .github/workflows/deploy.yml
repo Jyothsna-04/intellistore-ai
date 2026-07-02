@@ -1,0 +1,22 @@
+name: Deploy to Railway
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Railway
+        uses: bervProject/railway-deploy@main
+        with:
+          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          # This action automatically deploys the repository to the linked Railway project.
+          # The services (frontend, backend, ai-service) should be configured in the Railway dashboard 
+          # to point to their respective root directories.
+
