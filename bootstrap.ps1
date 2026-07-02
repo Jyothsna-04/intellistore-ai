@@ -10,6 +10,11 @@ Write-Host ""
 
 # 1. Check prerequisites
 Write-Host "Checking prerequisites..."
+if (Test-Path "C:\Program Files\Docker\Docker\resources\bin") {
+    if ($env:Path -notlike "*C:\Program Files\Docker\Docker\resources\bin*") {
+        $env:Path = "C:\Program Files\Docker\Docker\resources\bin;$env:Path"
+    }
+}
 $deps = @("docker")
 foreach ($dep in $deps) {
     if (-not (Get-Command $dep -ErrorAction SilentlyContinue)) {
