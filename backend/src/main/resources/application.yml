@@ -1,11 +1,11 @@
 spring:
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:intellistore}
-    username: ${DB_USER:postgres}
-    password: ${DB_PASSWORD:postgres}
+    username: ${DB_USER:intellistore_user}
+    password: ${DB_PASSWORD:IntelliStore_Secure_PG_2026_x9k2p}
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -22,14 +22,14 @@ spring:
 
 intellistore:
   app:
-    jwtSecret: ${JWT_SECRET:89qjw6b2y9asduioqwhne981y23hjaksdnqiweu89123hbnmasd}
+    jwtSecret: ${JWT_SECRET:Zk9uU2VkVmFsV29yZFNlY3JldEtleUZvckp3dEF1dGhlbnRpY2F0aW9uMjAyNg==}
     jwtExpirationMs: 86400000 # 24 hours
     jwtRefreshExpirationMs: 604800000 # 7 days
 
 minio:
   url: ${MINIO_URL:http://localhost:9000}
   access-key: ${MINIO_ACCESS_KEY:minioadmin}
-  secret-key: ${MINIO_SECRET_KEY:minioadmin}
+  secret-key: ${MINIO_SECRET_KEY:IntelliStore_Secure_Minio_2026_m8v3q}
   bucket-name: ${MINIO_BUCKET:files}
   bucket:
     quarantine: ${MINIO_QUARANTINE_BUCKET:quarantine}
@@ -43,4 +43,4 @@ encryption:
   # Base64 encoded 256-bit key for AES-GCM
   key: ${FILE_ENCRYPTION_KEY:1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t1u2v3w4x5y6z7a8b9c0d1e2f}
 server:
-  port: 8080
+  port: ${SERVER_PORT:8085}

@@ -9,11 +9,14 @@ class Settings(BaseSettings):
     REDIS_HOST: str = "redis"
     REDIS_PORT: int = 6379
     REDIS_PASSWORD: Optional[str] = None
+    REDIS_URL: Optional[str] = None
     EMBEDDING_CACHE_TTL_SECONDS: int = 604800 # 7 days
 
     # Qdrant Vector DB
     QDRANT_HOST: str = "qdrant"
     QDRANT_PORT: int = 6333
+    QDRANT_URL: Optional[str] = None
+    QDRANT_API_KEY: Optional[str] = None
 
     # AI Provider Selection
     AI_EMBEDDING_PROVIDER: str = "local" # Options: local, gemini, openai

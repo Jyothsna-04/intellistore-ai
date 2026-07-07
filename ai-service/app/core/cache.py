@@ -10,13 +10,20 @@ logger = logging.getLogger(__name__)
 class EmbeddingCache:
     def __init__(self):
         try:
-            self.redis_client = redis.Redis(
-                host=settings.REDIS_HOST,
-                port=settings.REDIS_PORT,
-                password=settings.REDIS_PASSWORD,
-                decode_responses=True,
-                socket_connect_timeout=2
-            )
+            if getattr(settings, "REDIS_URL", None):
+                self.redis_client = redis.Redis.from_url(
+                    settings.REDIS_URL,
+                    decode_responses=True,
+                    socket_connect_timeout=2
+                )
+            else:
+                self.redis_client = redis.Redis(
+                    host=settings.REDIS_HOST,
+                    port=settings.REDIS_PORT,
+                    password=settings.REDIS_PASSWORD,
+                    decode_responses=True,
+                    socket_connect_timeout=2
+                )
             self.enabled = True
         except Exception as e:
             logger.warning(f"Failed to initialize Redis embedding cache: {e}. Caching disabled.")

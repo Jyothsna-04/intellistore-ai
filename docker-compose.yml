@@ -149,8 +149,9 @@ services:
       CLAMD_PORT: 3310
       JWT_SECRET: ${JWT_SECRET:-changeme}
       FILE_ENCRYPTION_KEY: ${FILE_ENCRYPTION_KEY:-changeme}
+      SERVER_PORT: 8085
     ports:
-      - "8080:8080"
+      - "8085:8085"
     depends_on:
       db:
         condition: service_healthy
@@ -163,7 +164,7 @@ services:
     networks:
       - intellistore-net
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5

@@ -1,5 +1,7 @@
 # AI Agent Specification — IntelliStore AI
 
+> **Core AI Philosophy & Business Value**: All agents must adhere to the 3 mandatory questions (Problem, Action, Measurable Benefit) and track enterprise success metrics as specified in [PRODUCT_DIFFERENTIATOR.md](file:///c:/Users/jyoth/OneDrive/Desktop/Cloud_Project_1/IntelliStoreAI/docs/PRODUCT_DIFFERENTIATOR.md).
+
 ## Architecture: LangGraph Supervisor Pattern
 
 ```

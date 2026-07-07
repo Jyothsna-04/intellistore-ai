@@ -14,8 +14,10 @@ jobs:
 
       - name: Deploy to Railway
         uses: bervProject/railway-deploy@main
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         with:
-          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          service: "backend" # Update to "frontend" or "ai-service" depending on the target
           # This action automatically deploys the repository to the linked Railway project.
           # The services (frontend, backend, ai-service) should be configured in the Railway dashboard 
           # to point to their respective root directories.

@@ -7,6 +7,8 @@ The platform intelligently manages enterprise storage by reducing storage costs,
 storage tiers, detecting duplicate files, classifying documents, securing sensitive information,
 and providing an AI-powered Storage Copilot.
 
+> **Important**: See [PRODUCT_DIFFERENTIATOR.md](file:///c:/Users/jyoth/OneDrive/Desktop/Cloud_Project_1/IntelliStoreAI/docs/PRODUCT_DIFFERENTIATOR.md) for core AI success metrics, our 3-question AI recommendation philosophy, and recruiter demonstration guidelines.
+
 This project should resemble a commercial SaaS product — not a college project, tutorial, or
 proof-of-concept.
 
