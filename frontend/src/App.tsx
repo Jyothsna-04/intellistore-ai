@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './lib/queryClient';
+import { AuthProvider, useAuth } from './lib/hooks/useAuth';
 import { Sidebar } from './components/Sidebar';
 import { Navbar } from './components/Navbar';
 import { DashboardView } from './pages/DashboardView';
@@ -8,9 +11,30 @@ import { CopilotView } from './pages/CopilotView';
 import { AnalyticsView } from './pages/AnalyticsView';
 import { SecurityView } from './pages/SecurityView';
 import { SettingsView } from './pages/SettingsView';
+import { ActivityCenterView } from './pages/ActivityCenterView';
+import { LoginPage } from './pages/auth/LoginPage';
+import { RegisterPage } from './pages/auth/RegisterPage';
 import './index.css';
 
-export function App() {
+// ── Auth gate: show login/register if not authenticated ─────────────────────
+type AuthScreen = 'login' | 'register';
+
+function AuthGate({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuth();
+  const [authScreen, setAuthScreen] = useState<AuthScreen>('login');
+
+  if (!isAuthenticated) {
+    if (authScreen === 'register') {
+      return <RegisterPage onNavigateToLogin={() => setAuthScreen('login')} />;
+    }
+    return <LoginPage onNavigateToRegister={() => setAuthScreen('register')} />;
+  }
+
+  return <>{children}</>;
+}
+
+// ── Main App Shell ─────────────────────────────────────────────────────────
+function AppShell() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -20,45 +44,54 @@ export function App() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 font-sans selection:bg-blue-500 selection:text-white transition-colors duration-200">
-      {/* Sidebar Navigation */}
-      <Sidebar 
-        activeTab={activeTab} 
-        setActiveTab={handleNavigate} 
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
+      <Sidebar
+        activeTab={activeTab}
+        setActiveTab={handleNavigate}
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
 
-      {/* Main Container */}
-      <div className="flex-1 flex flex-col min-w-0 h-full relative overflow-hidden bg-slate-50 dark:bg-[#090d16]">
-        {/* Top Navbar with Dark/Light Theme Toggle */}
-        <Navbar 
-          onSearchClick={() => handleNavigate('search')} 
+      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+        <Navbar
+          onSearchClick={() => handleNavigate('search')}
           onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
         />
 
-        {/* Content Viewport */}
         <main className="flex-1 overflow-y-auto relative z-0">
-          {activeTab === 'dashboard' && <DashboardView onNavigate={handleNavigate} />}
-          
-          {(activeTab === 'explorer' || activeTab === 'shared' || activeTab === 'recent' || activeTab === 'favorites' || activeTab === 'trash') && (
-            <StorageExplorerView />
+          {activeTab === 'dashboard'  && <DashboardView onNavigate={handleNavigate} />}
+
+          {(activeTab === 'explorer' || activeTab === 'shared' || activeTab === 'recent' ||
+            activeTab === 'favorites' || activeTab === 'trash') && (
+            <StorageExplorerView initialView={activeTab} />
           )}
 
-          {activeTab === 'search' && <SearchView />}
+          {activeTab === 'search'     && <SearchView />}
 
-          {(activeTab === 'copilot' || activeTab === 'ai-center' || activeTab === 'optimization') && (
+          {(activeTab === 'copilot'   || activeTab === 'ai-center' || activeTab === 'optimization') && (
             <CopilotView />
           )}
-          
-          {activeTab === 'analytics' && <AnalyticsView />}
 
-          {activeTab === 'security' && <SecurityView />}
-
-          {activeTab === 'settings' && <SettingsView />}
+          {activeTab === 'analytics'  && <AnalyticsView />}
+          {activeTab === 'security'   && <SecurityView />}
+          {activeTab === 'settings'   && <SettingsView />}
+          {activeTab === 'activity'   && <ActivityCenterView />}
         </main>
       </div>
     </div>
+  );
+}
+
+// ── Root export ────────────────────────────────────────────────────────────
+export function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <AuthGate>
+          <AppShell />
+        </AuthGate>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 

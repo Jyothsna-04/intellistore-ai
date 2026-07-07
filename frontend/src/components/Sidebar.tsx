@@ -13,7 +13,8 @@ import {
   Settings, 
   HardDrive,
   Database,
-  CloudLightning
+  CloudLightning,
+  Activity
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -47,7 +48,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       title: 'WORKSPACE',
       items: [
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { id: 'explorer', label: 'My Files', icon: FolderGit2, badge: '1.4M' },
+        { id: 'explorer', label: 'My Files', icon: FolderGit2 },
         { id: 'shared', label: 'Shared With Me', icon: Users },
         { id: 'recent', label: 'Recent', icon: Clock },
         { id: 'favorites', label: 'Favorites', icon: Star },
@@ -66,6 +67,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       items: [
         { id: 'analytics', label: 'Analytics & Billing', icon: BarChart3 },
         { id: 'security', label: 'Security & ClamAV', icon: ShieldCheck, badge: 'Safe', badgeColor: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' },
+        { id: 'activity', label: 'Activity Center', icon: Activity },
         { id: 'settings', label: 'Settings', icon: Settings },
       ]
     }

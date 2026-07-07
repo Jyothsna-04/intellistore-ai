@@ -12,64 +12,116 @@ import {
   Clock, 
   Database,
   ChevronRight,
-  Zap
+  Zap,
+  Loader2,
+  AlertCircle
 } from 'lucide-react';
+import { useAnalytics, formatBytes } from '../lib/hooks/useAnalytics';
 
 interface DashboardViewProps {
   onNavigate?: (tab: string) => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
+  const { data: analytics, isLoading, error, refetch } = useAnalytics();
+
+  // Compute real metrics from backend data
+  const totalFilesStr  = isLoading ? '—' : (analytics?.totalFiles ?? 0).toLocaleString();
+  const totalUsedStr   = isLoading ? '—' : formatBytes(analytics?.totalStorageUsedBytes ?? 0);
+  const usedPercent    = isLoading ? 0   : Math.round(analytics?.storageUtilizationPercent ?? 0);
+  const totalUsersStr  = isLoading ? '—' : (analytics?.totalUsers ?? 0).toLocaleString();
+  const activeUsersStr = isLoading ? '—' : (analytics?.activeUsers ?? 0).toLocaleString();
+  const totalSharesStr = isLoading ? '—' : (analytics?.totalShares ?? 0).toLocaleString();
+
+  // Department breakdown sorted by usage descending
+  const departmentRows = analytics
+    ? Object.entries(analytics.storageByDepartment)
+        .sort(([, a], [, b]) => b - a)
+        .slice(0, 5)
+        .map(([dept, bytes], i) => {
+          const colors = ['bg-blue-500', 'bg-purple-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500'];
+          const total = analytics.totalStorageUsedBytes || 1;
+          return {
+            name:    dept,
+            used:    formatBytes(bytes),
+            percent: Math.round((bytes / total) * 100),
+            color:   colors[i % colors.length],
+          };
+        })
+    : [];
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+          <p className="text-sm text-slate-500">Loading live enterprise data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 flex items-center justify-center">
+        <div className="p-6 rounded-2xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/20 flex items-center gap-4 max-w-md">
+          <AlertCircle className="w-8 h-8 text-rose-500 shrink-0" />
+          <div>
+            <p className="font-bold text-rose-700 dark:text-rose-400">Failed to load analytics</p>
+            <p className="text-sm text-rose-600 dark:text-rose-300 mt-0.5">Backend API unreachable. Check Railway deployment.</p>
+            <button onClick={() => refetch()} className="mt-2 text-xs text-rose-600 dark:text-rose-400 hover:underline font-semibold">Retry</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const executiveStats = [
     {
-      title: 'Storage Health Score',
-      value: '94',
-      max: '/ 100',
-      change: '+4.2% from last month',
+      title: 'Total Files',
+      value: totalFilesStr,
+      max: 'files',
+      change: `${totalUsedStr} stored`,
       trend: 'up',
       icon: HardDrive,
       color: 'blue',
-      description: 'Optimal distribution across Hot, Cool, and Deep Archive storage tiers.'
+      description: `${usedPercent}% of total quota used. Files distributed across Hot NVMe and Filebase S3 Archive.`
     },
     {
-      title: 'AI Optimization Score',
-      value: '91',
-      max: '/ 100',
-      change: '14.2 TB recoverable',
-      trend: 'up',
+      title: 'Storage Used',
+      value: totalUsedStr,
+      max: '',
+      change: `${usedPercent}% quota utilization`,
+      trend: usedPercent > 80 ? 'down' : 'up',
       icon: Sparkles,
       color: 'purple',
-      description: 'LangGraph multi-agent supervisor has identified 4 actionable savings.'
+      description: 'Real-time storage consumption tracked from MinIO object store via PostgreSQL metadata.'
     },
     {
-      title: 'Zero-Trust Security Score',
-      value: '99.8',
-      max: '/ 100',
-      change: '0 breaches detected',
+      title: 'Active Users',
+      value: activeUsersStr,
+      max: `/ ${totalUsersStr}`,
+      change: '30-day active window',
       trend: 'up',
       icon: ShieldCheck,
       color: 'emerald',
-      description: '100% of payloads protected by AES-256-GCM & ClamAV malware quarantine.'
+      description: 'Zero-Trust JWT authentication active. All sessions protected by Redis token revocation.'
     },
     {
-      title: 'Monthly Cloud Cost',
-      value: '$1,240',
-      max: '/mo',
-      change: 'Save $420/mo (34%)',
-      trend: 'down',
+      title: 'Shared Items',
+      value: totalSharesStr,
+      max: 'shares',
+      change: `${analytics?.totalFolders ?? 0} folders`,
+      trend: 'up',
       icon: TrendingDown,
       color: 'amber',
-      description: 'Projected Q4 cost reduction after applying pending AI lifecycle policies.'
+      description: 'Files shared via expiring secure links with granular RBAC permission controls.'
     }
   ];
 
-  const departmentUsage = [
-    { name: 'Finance & Accounts', used: '4.8 TB', percent: 34, color: 'bg-blue-500', cost: '$410/mo', trend: '+2%' },
-    { name: 'Engineering & R&D', used: '5.2 TB', percent: 37, color: 'bg-purple-500', cost: '$445/mo', trend: '+8%' },
-    { name: 'Human Resources', used: '1.8 TB', percent: 13, color: 'bg-emerald-500', cost: '$155/mo', trend: '-1%' },
-    { name: 'Legal & Compliance', used: '2.4 TB', percent: 16, color: 'bg-amber-500', cost: '$230/mo', trend: '+0%' },
-  ];
+  // Real department rows from PostgreSQL — dynamically computed in hook above
+  const departmentUsage = departmentRows;
+
 
   const recentAiInsights = [
     {
@@ -283,7 +335,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-slate-900 dark:text-white">{dept.used}</span>
                       <span className="text-[10px] font-semibold text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
-                        {dept.cost}
+                        {dept.percent}%
                       </span>
                     </div>
                   </div>
