@@ -64,9 +64,3 @@ cd ai-service
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
-
----
-
-## 📄 License
-
-This project is open-source and available under the MIT License.
