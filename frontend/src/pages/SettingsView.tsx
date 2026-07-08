@@ -11,7 +11,7 @@ export const SettingsView: React.FC = () => {
   const [preferences, setPreferences] = useState(() => {
     const savedPrefs = localStorage.getItem('intellistore_user_prefs');
     return savedPrefs ? JSON.parse(savedPrefs) : {
-      primaryModel: 'Llama-3-70B-Instruct (Local Railway Hub)',
+      primaryModel: 'Llama-3-70B-Instruct (Render AI Hub)',
       requireEncryption: true,
       blockPendingScan: true,
       autoRevokeRedis: true
@@ -81,8 +81,8 @@ export const SettingsView: React.FC = () => {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
             <div className="space-y-1">
-              <label className="font-bold text-slate-700 dark:text-slate-300">Hot NVMe Pool (MinIO / S3)</label>
-              <input type="text" readOnly value="s3://intellistore-hot-nvme.railway.internal" className="w-full p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-mono text-slate-500" />
+              <label className="font-bold text-slate-700 dark:text-slate-300">Active Storage Pool (Filebase S3)</label>
+              <input type="text" readOnly value="s3://intellistore-files.s3.filebase.io" className="w-full p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-mono text-slate-500" />
             </div>
             <div className="space-y-1">
               <label className="font-bold text-slate-700 dark:text-slate-300">Cold Archive (Filebase IPFS/S3)</label>
@@ -103,7 +103,7 @@ export const SettingsView: React.FC = () => {
                 onChange={(e) => setPreferences({ ...preferences, primaryModel: e.target.value })}
                 className="w-full p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-semibold text-slate-700 dark:text-slate-300"
               >
-                <option value="Llama-3-70B-Instruct (Local Railway Hub)">Llama-3-70B-Instruct (Local Railway Hub)</option>
+                <option value="Llama-3-70B-Instruct (Render AI Hub)">Llama-3-70B-Instruct (Render AI Hub)</option>
                 <option value="Google Gemini 1.5 Pro">Google Gemini 1.5 Pro</option>
                 <option value="OpenAI GPT-4o Enterprise">OpenAI GPT-4o Enterprise</option>
               </select>

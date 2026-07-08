@@ -34,7 +34,7 @@ export const CopilotView: React.FC = () => {
         analysis: 'LangGraph heuristics analyzed access logs across 14 database tables and confirmed zero READ/WRITE operations since April 1st.',
         reason: 'Migrating immutable financial records to decentralized Filebase S3 Archive ($0.015/GB/mo) satisfies 7-year SOX compliance while cutting storage costs by 90%.',
         resources: 'Bucket: intellistore-hot-nvme -> Target: intellistore-archive-s3 (4,210 blob files)',
-        costImpact: 'Immediate reduction of $180.00/month on AWS/Railway storage invoices.',
+        costImpact: 'Immediate reduction of $180.00/month on cloud storage invoices.',
         confidenceScore: '99.4% (Based on 180-day zero-read access telemetry)',
         rollback: '100% Rollback available via instant S3 reverse-restore API (RTO < 5 minutes).',
         security: 'Encrypted with client-side AES-256-GCM before transport over TLS 1.3.',

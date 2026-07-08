@@ -1,5 +1,5 @@
 /**
- * VITE_API_URL must be set in .env.local (Railway backend URL).
+ * VITE_API_URL must be set in environment variables (Render backend URL).
  * Falls back to localhost:8085 for local development.
  */
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8085';

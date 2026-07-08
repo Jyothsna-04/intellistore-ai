@@ -1,5 +1,10 @@
 # IntelliStore AI – Enterprise Storage Optimization Platform using Agentic AI
 
+[![Live Frontend Demo](https://img.shields.io/badge/Live%20Demo-Vercel-blue?style=for-the-badge&logo=vercel)](https://intellistore-ai.vercel.app/)
+[![Backend API](https://img.shields.io/badge/Backend%20API-Render-green?style=for-the-badge&logo=render)](https://intellistore-ai.onrender.com/)
+[![AI Microservice](https://img.shields.io/badge/AI%20Service-Render-purple?style=for-the-badge&logo=python)](https://intellistore-ai-service.onrender.com/)
+
+> **Live Production App**: **[https://intellistore-ai.vercel.app](https://intellistore-ai.vercel.app/)**  
 > **NOT A CLONE OF GOOGLE DRIVE OR DROPBOX.**  
 > **IntelliStore AI is an autonomous, AI-powered Enterprise Storage Optimization Platform inspired by NetApp, Pure Storage, Microsoft SharePoint, Dropbox Business, AWS S3, and modern AI-powered enterprise software.**
 

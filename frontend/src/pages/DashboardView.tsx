@@ -68,7 +68,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
           <AlertCircle className="w-8 h-8 text-rose-500 shrink-0" />
           <div>
             <p className="font-bold text-rose-700 dark:text-rose-400">Failed to load analytics</p>
-            <p className="text-sm text-rose-600 dark:text-rose-300 mt-0.5">Backend API unreachable. Check Railway deployment.</p>
+            <p className="text-sm text-rose-600 dark:text-rose-300 mt-0.5">Backend API unreachable. Check Render deployment.</p>
             <button onClick={() => refetch()} className="mt-2 text-xs text-rose-600 dark:text-rose-400 hover:underline font-semibold">Retry</button>
           </div>
         </div>
@@ -166,7 +166,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
               Executive Dashboard
             </span>
             <span className="text-xs text-slate-400 font-medium flex items-center gap-1">
-              <Clock className="w-3 h-3" /> Updated live via Railway AI Supervisor
+              <Clock className="w-3 h-3" /> Updated live via Render AI Supervisor
             </span>
           </div>
           <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white mt-1 tracking-tight">
