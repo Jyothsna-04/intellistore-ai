@@ -3,6 +3,11 @@ spring:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:intellistore}
     username: ${DB_USER:intellistore_user}
     password: ${DB_PASSWORD:IntelliStore_Secure_PG_2026_x9k2p}
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      idle-timeout: 300000
+      connection-timeout: 10000
   jpa:
     hibernate:
       ddl-auto: update
