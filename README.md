@@ -20,6 +20,45 @@ An autonomous **Agentic AI** Enterprise Storage Optimization Platform powered by
 
 ---
 
+## 🤖 Agentic AI Autonomous Workflow
+
+IntelliStore AI replaces static storage policies with an autonomous **LangGraph Multi-Agent Supervisor** loop:
+
+```
+[Storage Events / File Uploads]
+            │
+            ▼
+┌────────────────────────────────────────────────────────┐
+│     1. Telemetry & Metadata Collector Agent            │
+│     Monitors file access telemetry, size & duplicates  │
+└───────────────────────────┬────────────────────────────┘
+                            │
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│     2. LangGraph Supervisor Orchestration              │
+│     Coordinates Heuristic, Semantic & Security Agents  │
+└───────────────────────────┬────────────────────────────┘
+                            │
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│     3. Explainable AI (XAI) Recommendation Engine      │
+│     Calculates ROI, proposes S3 cold archive tiering   │
+└───────────────────────────┬────────────────────────────┘
+                            │
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│     4. Instant HTML Notifications (Resend API)         │
+│     Delivers audit alerts & recommendations via email  │
+└────────────────────────────────────────────────────────┘
+```
+
+1. **Continuous Telemetry**: The system continuously tracks access patterns, file ages, duplicate hashes, and storage pools.
+2. **Multi-Agent Evaluation**: The LangGraph Supervisor delegates analysis to specialized sub-agents (Duplicate Detection, Access Heuristics, Cost Impact, and Compliance).
+3. **Autonomous Remediation & XAI**: Produces explainable recommendations with financial impact calculations and rollback paths before moving cold files to decentralized Filebase S3 storage.
+4. **Real-time Notifications**: Triggers immediate HTML email alerts via **Resend** to keep administrators and users informed.
+
+---
+
 ## 🛠️ Technology Stack
 
 | Component | Technology | Cloud Hosting |
