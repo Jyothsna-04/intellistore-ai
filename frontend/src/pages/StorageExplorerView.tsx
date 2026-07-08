@@ -163,6 +163,8 @@ export const StorageExplorerView: React.FC<StorageExplorerViewProps> = ({ initia
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName]   = useState('');
   const [deletingIds, setDeletingIds]       = useState<Set<string>>(new Set());
+  const [isDragging, setIsDragging]         = useState(false);
+  const [isRefreshing, setIsRefreshing]     = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
@@ -239,6 +241,62 @@ export const StorageExplorerView: React.FC<StorageExplorerViewProps> = ({ initia
     e.target.value = '';
   }, [currentFolderId, uploadMutation]);
 
+  // ── Drag & Drop handlers ───────────────────────────────────────────────────
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isTrashView) setIsDragging(true);
+  }, [isTrashView]);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    if (isTrashView || !e.dataTransfer.files?.length) return;
+
+    Array.from(e.dataTransfer.files).forEach(file => {
+      const uploadId = `up-${Date.now()}-${Math.random()}`;
+      const queueItem: UploadItem = {
+        id: uploadId,
+        name: file.name,
+        size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
+        progress: 0,
+        status: 'uploading',
+      };
+      setUploadQueue(prev => [...prev, queueItem]);
+
+      uploadMutation.mutate(
+        {
+          file,
+          folderId: currentFolderId,
+          onProgress: (percent) => {
+            setUploadQueue(prev =>
+              prev.map(i => i.id === uploadId ? { ...i, progress: percent } : i)
+            );
+          },
+        },
+        {
+          onSuccess: () => {
+            setUploadQueue(prev =>
+              prev.map(i => i.id === uploadId ? { ...i, progress: 100, status: 'completed' } : i)
+            );
+          },
+          onError: (err: any) => {
+            setUploadQueue(prev =>
+              prev.map(i => i.id === uploadId ? { ...i, status: 'error', error: err.message } : i)
+            );
+          },
+        }
+      );
+    });
+  }, [isTrashView, currentFolderId, uploadMutation]);
+
   // ── Folder navigation ──────────────────────────────────────────────────────
   const openFolder = useCallback((folder: FolderDto) => {
     setCurrentFolderId(folder.id);
@@ -293,7 +351,24 @@ export const StorageExplorerView: React.FC<StorageExplorerViewProps> = ({ initia
   const isLoading = filesLoading || foldersLoading;
 
   return (
-    <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-5 animate-in fade-in duration-300">
+    <div 
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      className="p-4 md:p-8 max-w-7xl mx-auto space-y-5 relative animate-in fade-in duration-300 min-h-[500px]"
+    >
+      {isDragging && (
+        <div className="absolute inset-0 z-50 bg-blue-600/10 dark:bg-blue-500/10 backdrop-blur-xs border-2 border-dashed border-blue-500 rounded-3xl flex flex-col items-center justify-center pointer-events-none animate-in fade-in duration-150">
+          <UploadCloud className="w-16 h-16 text-blue-500 animate-bounce mb-3" />
+          <p className="text-lg font-extrabold text-blue-600 dark:text-blue-400">
+            Drop files here to upload instantly to {currentHeader.title}
+          </p>
+          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1">
+            AES-256 Client-Side Encrypted & SHA-256 Deduplicated
+          </p>
+        </div>
+      )}
+
       {/* Hidden file input */}
       <input
         ref={fileInputRef}
@@ -341,11 +416,15 @@ export const StorageExplorerView: React.FC<StorageExplorerViewProps> = ({ initia
               <FolderPlus className="w-4 h-4" /> New Folder
             </button>
             <button
-              onClick={() => { refetchFiles(); refetchFolders(); }}
-              className="p-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all"
-              title="Refresh"
+              onClick={async () => {
+                setIsRefreshing(true);
+                await Promise.all([refetchFiles(), refetchFolders()]);
+                setTimeout(() => setIsRefreshing(false), 500);
+              }}
+              className="p-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all cursor-pointer"
+              title="Refresh Files List"
             >
-              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${(isLoading || isRefreshing) ? 'animate-spin text-blue-500' : ''}`} />
             </button>
             {/* View toggle */}
             <div className="flex items-center rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">

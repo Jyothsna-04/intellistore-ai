@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient, { extractData } from '../apiClient';
+import { API_URL } from '../config';
 
 // Re-export folder hooks for convenience
 export { useFolders, useCreateFolder, type FolderDto } from './useFolders';
@@ -121,8 +122,7 @@ export const useUploadFile = () => {
         xhr.addEventListener('error', () => reject(new Error('Network error during upload')));
         xhr.addEventListener('abort', () => reject(new Error('Upload cancelled')));
 
-        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8085';
-        xhr.open('POST', `${baseUrl}/api/storage/files`);
+        xhr.open('POST', `${API_URL}/api/storage/files`);
         if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
         xhr.send(formData);
       });
