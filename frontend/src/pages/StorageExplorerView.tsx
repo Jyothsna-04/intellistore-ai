@@ -143,17 +143,33 @@ interface StorageExplorerViewProps {
 
 export const StorageExplorerView: React.FC<StorageExplorerViewProps> = ({ initialView }) => {
   const isTrashView = initialView === 'trash';
+  const isRecentView = initialView === 'recent';
+
+  const viewTitles: Record<string, { title: string; desc: string }> = {
+    explorer: { title: 'My Files', desc: 'Organize, encrypt, and manage enterprise objects on Filebase S3.' },
+    shared: { title: 'Shared With Me', desc: 'Files and folders shared with your organizational role via AES-256 RBAC.' },
+    recent: { title: 'Recent Files', desc: 'Files uploaded or modified across your enterprise storage in the last 30 days.' },
+    favorites: { title: 'Favorites', desc: 'Quick-access starred enterprise files and folders.' },
+    trash: { title: 'Trash & Quarantine', desc: 'Deleted files held in 30-day quarantine before permanent purge.' },
+  };
+  const currentHeader = viewTitles[initialView || 'explorer'] || viewTitles.explorer;
 
   const [viewMode, setViewMode]           = useState<'grid' | 'list'>('list');
   const [searchQuery, setSearchQuery]     = useState('');
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [uploadQueue, setUploadQueue]     = useState<UploadItem[]>([]);
   const [currentFolderId, setCurrentFolderId] = useState<string | undefined>(undefined);
-  const [breadcrumbs, setBreadcrumbs]     = useState<{ id?: string; name: string }[]>([{ name: 'My Files' }]);
+  const [breadcrumbs, setBreadcrumbs]     = useState<{ id?: string; name: string }[]>([{ name: currentHeader.title }]);
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName]   = useState('');
   const [deletingIds, setDeletingIds]       = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    const h = viewTitles[initialView || 'explorer'] || viewTitles.explorer;
+    setBreadcrumbs([{ name: h.title }]);
+    setCurrentFolderId(undefined);
+  }, [initialView]);
 
   // ── Real backend hooks ─────────────────────────────────────────────────────
   const { data: files = [], isLoading: filesLoading, error: filesError, refetch: refetchFiles } =
@@ -166,7 +182,11 @@ export const StorageExplorerView: React.FC<StorageExplorerViewProps> = ({ initia
   const permanentDeleteMutation = usePermanentDelete();
   const uploadMutation        = useUploadFile();
 
-  const displayFiles = isTrashView ? trashFiles : files;
+  const displayFiles = isTrashView
+    ? trashFiles
+    : isRecentView
+    ? [...files].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    : files;
 
   // ── Search filter ──────────────────────────────────────────────────────────
   const filteredFiles = displayFiles.filter(f =>

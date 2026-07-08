@@ -12,8 +12,18 @@ import {
   Check
 } from 'lucide-react';
 
-export const CopilotView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'recommendations' | 'duplicates' | 'forecast' | 'summary' | 'simulation'>('recommendations');
+interface CopilotViewProps {
+  initialTab?: 'recommendations' | 'duplicates' | 'forecast' | 'summary' | 'simulation';
+}
+
+export const CopilotView: React.FC<CopilotViewProps> = ({ initialTab = 'recommendations' }) => {
+  const [activeTab, setActiveTab] = useState<'recommendations' | 'duplicates' | 'forecast' | 'summary' | 'simulation'>(initialTab);
+
+  React.useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
   const [selectedXaiRec, setSelectedXaiRec] = useState<any | null>(null);
   const [simDays, setSimDays] = useState<number>(90);
   const [simAggression, setSimAggression] = useState<'conservative' | 'balanced' | 'aggressive'>('balanced');

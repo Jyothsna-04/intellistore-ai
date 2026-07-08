@@ -68,8 +68,11 @@ function AppShell() {
 
           {activeTab === 'search'     && <SearchView />}
 
-          {(activeTab === 'copilot'   || activeTab === 'ai-center' || activeTab === 'optimization') && (
-            <CopilotView />
+          {(activeTab === 'copilot'   || activeTab === 'ai-center') && (
+            <CopilotView initialTab="recommendations" />
+          )}
+          {activeTab === 'optimization' && (
+            <CopilotView initialTab="duplicates" />
           )}
 
           {activeTab === 'analytics'  && <AnalyticsView />}
