@@ -29,43 +29,10 @@ export const AdminPortalView: React.FC = () => {
       name: 'Jyothsna Sai P R',
       email: 'jyothsnrbipandu@gmail.com',
       role: 'ROLE_ADMIN',
-      storageUsed: '12.4 GB',
+      storageUsed: '14.2 GB',
       quota: '500 GB',
       mfa: true,
-      lastActive: 'Just now',
-      status: 'ACTIVE'
-    },
-    {
-      id: 'usr-std-02',
-      name: 'Enterprise Engineer',
-      email: 'engineer@intellistore.ai',
-      role: 'ROLE_USER',
-      storageUsed: '4.8 GB',
-      quota: '50 GB',
-      mfa: true,
-      lastActive: '14 mins ago',
-      status: 'ACTIVE'
-    },
-    {
-      id: 'usr-std-03',
-      name: 'Data Science Lead',
-      email: 'datascience@intellistore.ai',
-      role: 'ROLE_USER',
-      storageUsed: '19.1 GB',
-      quota: '100 GB',
-      mfa: true,
-      lastActive: '1 hr ago',
-      status: 'ACTIVE'
-    },
-    {
-      id: 'usr-std-04',
-      name: 'Cloud Auditor',
-      email: 'compliance@intellistore.ai',
-      role: 'ROLE_USER',
-      storageUsed: '850 MB',
-      quota: '25 GB',
-      mfa: false,
-      lastActive: '3 hrs ago',
+      lastActive: 'Active Now',
       status: 'ACTIVE'
     }
   ]);
