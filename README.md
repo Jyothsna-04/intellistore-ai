@@ -1,104 +1,69 @@
-# IntelliStore AI – Enterprise Storage Optimization Platform using Agentic AI
+# IntelliStore AI ⚡
+
+An autonomous, AI-powered **Enterprise Storage Optimization Platform** that acts like a smart storage administrator—continuously analyzing files, optimizing storage tiers, reducing cloud costs, and securing your organization's data.
 
 [![Live Frontend Demo](https://img.shields.io/badge/Live%20Demo-Vercel-blue?style=for-the-badge&logo=vercel)](https://intellistore-ai.vercel.app/)
 [![Backend API](https://img.shields.io/badge/Backend%20API-Render-green?style=for-the-badge&logo=render)](https://intellistore-ai.onrender.com/)
 [![AI Microservice](https://img.shields.io/badge/AI%20Service-Render-purple?style=for-the-badge&logo=python)](https://intellistore-ai-service.onrender.com/)
 
-> **Live Production App**: **[https://intellistore-ai.vercel.app](https://intellistore-ai.vercel.app/)**  
-> **NOT A CLONE OF GOOGLE DRIVE OR DROPBOX.**  
-> **IntelliStore AI is an autonomous, AI-powered Enterprise Storage Optimization Platform inspired by NetApp, Pure Storage, Microsoft SharePoint, Dropbox Business, AWS S3, and modern AI-powered enterprise software.**
+---
+
+## ✨ Key Features
+
+* **🤖 Autonomous Storage Tiering**: Automatically identifies inactive files and recommends migrations from Hot NVMe storage to Cold S3 Archive storage to reduce monthly costs.
+* **💡 Explainable AI (XAI)**: Every optimization recommendation includes clear reasoning, cost-impact analysis, and rollback guarantees.
+* **📂 Enterprise File Sharing & RBAC**: Upload, organize, and share files and folders securely with role-based access control (Admin, Manager, User).
+* **🔍 Semantic & Keyword Search**: Fast file discovery powered by vector similarity search (Qdrant) and PostgreSQL metadata indexing.
+* **📊 Real-time Executive Dashboard**: Monitor storage quotas, cost savings, duplicate files, and security health scores in real time.
 
 ---
 
-## 🌟 Product Differentiator & Recruiter Demonstration Goal
+## 🛠️ Technology Stack
 
-If a recruiter asks:  
-*"What makes IntelliStore AI different from Google Drive or Dropbox?"*
-
-**The answer is simple and demonstrable:**  
-While Google Drive and Dropbox primarily provide passive cloud storage and file sharing, **IntelliStore AI continuously analyzes enterprise storage using autonomous AI agents to optimize storage utilization, improve security, reduce operational costs, predict future storage requirements, enhance compliance, and generate measurable business recommendations.**
-
-It behaves like an experienced **Enterprise Storage Administrator** who proactively works to improve storage health without requiring manual intervention.
-
----
-
-## 🧠 Core AI Philosophy: The 3 Mandatory Questions
-
-Every autonomous AI Agent in IntelliStore AI must answer **three mandatory questions** before producing any recommendation:
-1. **What enterprise problem exists?** (e.g., duplicate files consuming expensive NVMe storage)
-2. **What action should be taken?** (e.g., move 2,450 inactive files from HOT to COLD/ARCHIVE tier)
-3. **What measurable business benefit will the organization receive?** (e.g., reclaim 6.2 TB, saving $180.50/month)
-
-*If these questions cannot be answered, the recommendation is never generated.*
+| Component | Technology | Cloud Hosting |
+| :--- | :--- | :--- |
+| **Frontend** | React 18, Vite, TypeScript, Tailwind CSS | [Vercel](https://intellistore-ai.vercel.app/) |
+| **Backend API** | Java 17, Spring Boot 3, Spring Security, Flyway | [Render](https://intellistore-ai.onrender.com/) |
+| **AI Microservice** | Python 3.11, FastAPI, LangGraph | [Render](https://intellistore-ai-service.onrender.com/) |
+| **Database** | PostgreSQL 15 | Supabase Cloud |
+| **Cache & Sessions** | Serverless Redis | Upstash Cloud |
+| **Object Storage** | S3-Compatible Blob Storage | Filebase S3 |
+| **Vector Index** | Qdrant Vector Database | Qdrant Cloud |
 
 ---
 
-## 📊 AI Success & Enterprise Health Metrics
+## 🚀 Quickstart (Local Development)
 
-The AI system continuously calculates and maintains 19 critical enterprise metrics:
-1. **Storage Health Score (0–100)**
-2. **Optimization Score**
-3. **Security Score**
-4. **Storage Efficiency Score**
-5. **Compliance Score**
-6. **Monthly Storage Cost**
-7. **Estimated Annual Cost**
-8. **Potential Cost Savings**
-9. **Recoverable Storage**
-10. **Duplicate File Percentage**
-11. **Inactive Data Percentage**
-12. **Cold Storage Percentage**
-13. **Compression Opportunity**
-14. **Predicted Storage Growth**
-15. **Storage Trend**
-16. **Optimization Tasks Pending**
-17. **Completed Optimization Tasks**
-18. **Risk Level**
-19. **Overall Enterprise Health Score**
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Jyothsna-04/intellistore-ai.git
+cd intellistore-ai
+```
 
----
+### 2. Run the Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-## 🏗️ Polyglot Architecture & Tech Stack
+### 3. Run the Backend (Spring Boot)
+```bash
+cd backend
+mvn spring-boot:run
+```
+Backend API runs on port `8085`.
 
-IntelliStore AI follows strict enterprise software engineering standards across a polyglot microservices architecture:
-
-- **Frontend (`/frontend`)**: React 18, Vite, TypeScript, Tailwind CSS, Recharts, Lucide Icons (Dark Glassmorphism UI)
-- **Core Backend (`/backend`)**: Java 21, Spring Boot 3.3, Spring Security, JWT, JPA/Hibernate, Flyway Migrations, MinIO SDK, Apache Tika
-- **AI Orchestration Service (`/ai-service`)**: Python 3.11+, FastAPI, LangGraph Supervisor Pattern, LangChain, Sentence Transformers, Qdrant Client, OpenAI / Ollama Fallback Engine
-- **Enterprise Infrastructure (Docker Compose)**:
-  - **PostgreSQL 15** (Relational metadata, users, audit & security logs)
-  - **MinIO** (S3-compatible object storage with quarantine bucket)
-  - **Redis 7** (Token blacklisting & high-speed caching)
-  - **Qdrant** (Vector database for semantic similarity and duplicate detection)
-  - **ClamAV** (Antivirus heuristic scanning daemon)
-  - **Mailpit** (SMTP notification engine)
+### 4. Run the AI Microservice (FastAPI)
+```bash
+cd ai-service
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
 
 ---
 
-## 🚀 Quick Start (Docker Compose)
+## 📄 License & Contributing
 
-1. **Clone & Configure**:
-   ```bash
-   git clone https://github.com/Jyothsna-04/intellistore-ai.git
-   cd intellistore-ai
-   cp .env.example .env.local
-   ```
-2. **Start Enterprise Infrastructure**:
-   ```bash
-   docker-compose up -d db minio redis qdrant clamav mailpit
-   ```
-3. **Run Services**:
-   - **Backend**: `cd backend && mvn spring-boot:run` (Runs on port `8085`)
-   - **AI Service**: `cd ai-service && .\venv\Scripts\uvicorn.exe app.main:app --host 0.0.0.0 --port 8000`
-   - **Frontend**: `cd frontend && npm run dev` (Runs on port `5173` or `3000`)
-
----
-
-## 📚 Documentation Reference
-
-- **[Product Differentiator & AI Philosophy](docs/PRODUCT_DIFFERENTIATOR.md)**
-- **[Project Requirements & Vision](docs/PROJECT_REQUIREMENTS.md)**
-- **[AI Agent Specification (LangGraph 12-Agent System)](docs/AI_AGENT_SPEC.md)**
-- **[Global Engineering Standards](docs/GLOBAL_ENGINEERING_STANDARDS.md)**
-- **[Architecture Decision Records (ADR)](docs/DECISIONS.md)**
-- **[Project Progress & Verification Report](docs/PROJECT_PROGRESS.md)**
+Contributions are welcome! Please see [CONTRIBUTING.md](docs/CONTRIBUTING.md) for simple guidelines on how to submit pull requests.

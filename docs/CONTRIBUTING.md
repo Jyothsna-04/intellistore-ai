@@ -1,57 +1,56 @@
-# Contributing Guide — IntelliStore AI
+# Contributing to IntelliStore AI 🤝
 
-## Engineering Philosophy
-
-Security → Reliability → Maintainability → Scalability → Developer Experience
-
-Never sacrifice correctness for speed. Never vibe-code.
+Thank you for your interest in contributing to **IntelliStore AI**! Whether you are fixing a bug, adding a new feature, or improving documentation, we welcome your pull requests.
 
 ---
 
-## Development Workflow
+## 🚀 How to Contribute
 
-### Milestone-Based Development
+### 1. Fork & Clone
+Fork the repository on GitHub and clone your fork locally:
+```bash
+git clone https://github.com/your-username/intellistore-ai.git
+cd intellistore-ai
+```
 
-1. Receive milestone specification
-2. Read all documentation in `/docs/` before writing any code
-3. Implement ONLY the requested milestone scope
-4. Run the Quality Gate (mandatory)
-5. Create versioned release
-6. Commit with conventional commits
-7. Update all documentation
+### 2. Create a Feature Branch
+Create a branch for your work:
+```bash
+git checkout -b feature/amazing-new-feature
+```
+
+### 3. Make Your Changes
+Make your changes in the appropriate directory:
+- `frontend/`: React + Vite UI components and hooks
+- `backend/`: Java Spring Boot controllers, services, and entities
+- `ai-service/`: Python FastAPI and LangGraph agents
+
+### 4. Test Your Code
+Ensure your changes compile and run cleanly without errors:
+- Frontend: `npm run build`
+- Backend: `mvn clean test`
+
+### 5. Commit & Push
+Use descriptive commit messages:
+```bash
+git commit -m "feat: add amazing new feature"
+git push origin feature/amazing-new-feature
+```
+
+### 6. Open a Pull Request
+Open a Pull Request on GitHub against the `main` branch. Provide a brief summary of what your PR adds or fixes.
 
 ---
 
-## Definition of Done (DoD)
+## 💡 Code Style & Guidelines
+- Keep code clean, readable, and well-structured.
+- Avoid committing sensitive API keys or `.env` secrets.
+- Update documentation (`README.md` or `/docs`) if adding new features.
 
-Every milestone is **not complete** until ALL of the following are true:
-
-| # | Criterion | Description |
-|---|---|---|
-| 1 | ✅ Feature Implemented | All specified features working, no placeholders |
-| 2 | ✅ Build Passes | Zero compilation errors, zero runtime errors |
-| 3 | ✅ Tests Pass | All unit, integration, API, security tests green |
-| 4 | ✅ Security Review | Quality Gate security checklist passed |
-| 5 | ✅ Documentation Updated | All relevant docs reflect implementation |
-| 6 | ✅ ADR Updated | Any architectural decisions recorded in DECISIONS.md |
-| 7 | ✅ Known Issues Documented | All bugs and technical debt in KNOWN_ISSUES.md |
-| 8 | ✅ Code Reviewed | Architecture, security, performance, readability verified |
-| 9 | ✅ Performance Acceptable | No N+1 queries, acceptable response times |
-| 10 | ✅ Quality Gate Passed | Full engineering audit score acceptable |
-| 11 | ✅ Git Commit Prepared | Conventional commit message written |
-| 12 | ✅ Release Notes Generated | CHANGELOG.md updated with version entry |
-
----
-
-## Mandatory Quality Gate
-
-After every milestone, execute the full Quality Gate before proceeding.
 
 The Quality Gate audits:
 - Architecture (Clean Architecture, SOLID, DRY)
 - Security (JWT, RBAC, secrets, injection protection)
-- Database (schema, indexes, constraints, migrations)
-- API (REST standards, DTOs, validation, error handling)
 - Frontend (protected routes, role UI, responsive, dark mode)
 - Testing (unit, integration, API, auth, authorization)
 - Performance (queries, response time, bundle size)
