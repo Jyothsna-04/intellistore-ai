@@ -1,6 +1,6 @@
-# IntelliStore AI ⚡
+# IntelliStore AI ⚡ — Agentic AI Enterprise Storage Platform
 
-An autonomous, AI-powered **Enterprise Storage Optimization Platform** that acts like a smart storage administrator—continuously analyzing files, optimizing storage tiers, reducing cloud costs, and securing your organization's data.
+An autonomous **Agentic AI** Enterprise Storage Optimization Platform powered by a LangGraph multi-agent supervisor system that continuously analyzes files, optimizes storage tiers, reduces cloud costs, secures organizational data, and delivers instant HTML email alerts via **Resend**.
 
 [![Live Frontend Demo](https://img.shields.io/badge/Live%20Demo-Vercel-blue?style=for-the-badge&logo=vercel)](https://intellistore-ai.vercel.app/)
 [![Backend API](https://img.shields.io/badge/Backend%20API-Render-green?style=for-the-badge&logo=render)](https://intellistore-ai.onrender.com/)
@@ -10,8 +10,10 @@ An autonomous, AI-powered **Enterprise Storage Optimization Platform** that acts
 
 ## ✨ Key Features
 
-* **🤖 Autonomous Storage Tiering**: Automatically identifies inactive files and recommends migrations from Hot NVMe storage to Cold S3 Archive storage to reduce monthly costs.
+* **🧠 Agentic AI Multi-Agent Architecture**: Powered by a LangGraph multi-agent supervisor that autonomous AI agents use to analyze storage health, detect duplicates, and generate actionable cost-saving recommendations.
+* **🤖 Autonomous Storage Tiering**: Automatically identifies inactive files and recommends migrations from Hot NVMe storage to Cold S3 Archive storage to reduce monthly invoices.
 * **💡 Explainable AI (XAI)**: Every optimization recommendation includes clear reasoning, cost-impact analysis, and rollback guarantees.
+* **📧 Real-time Email Notifications (Resend)**: Sends enterprise HTML email alerts directly to users for account verification, password resets, and instant file/folder sharing notifications.
 * **📂 Enterprise File Sharing & RBAC**: Upload, organize, and share files and folders securely with role-based access control (Admin, Manager, User).
 * **🔍 Semantic & Keyword Search**: Fast file discovery powered by vector similarity search (Qdrant) and PostgreSQL metadata indexing.
 * **📊 Real-time Executive Dashboard**: Monitor storage quotas, cost savings, duplicate files, and security health scores in real time.
@@ -24,11 +26,12 @@ An autonomous, AI-powered **Enterprise Storage Optimization Platform** that acts
 | :--- | :--- | :--- |
 | **Frontend** | React 18, Vite, TypeScript, Tailwind CSS | [Vercel](https://intellistore-ai.vercel.app/) |
 | **Backend API** | Java 17, Spring Boot 3, Spring Security, Flyway | [Render](https://intellistore-ai.onrender.com/) |
-| **AI Microservice** | Python 3.11, FastAPI, LangGraph | [Render](https://intellistore-ai-service.onrender.com/) |
+| **Agentic AI Service** | Python 3.11, FastAPI, LangGraph Supervisor | [Render](https://intellistore-ai-service.onrender.com/) |
 | **Database** | PostgreSQL 15 | Supabase Cloud |
 | **Cache & Sessions** | Serverless Redis | Upstash Cloud |
-| **Object Storage** | S3-Compatible Blob Storage | Filebase S3 |
+| **Object Storage** | S3-Compatible Decentralized Blob Storage | Filebase S3 |
 | **Vector Index** | Qdrant Vector Database | Qdrant Cloud |
+| **Email Delivery Engine** | Resend HTTP REST API | Resend Cloud |
 
 ---
 
