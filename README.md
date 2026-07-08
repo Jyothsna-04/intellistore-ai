@@ -64,6 +64,6 @@ uvicorn app.main:app --reload --port 8000
 
 ---
 
-## 📄 License & Contributing
+## 📄 License
 
-Contributions are welcome! Please see [CONTRIBUTING.md](docs/CONTRIBUTING.md) for simple guidelines on how to submit pull requests.
+This project is open-source and available under the MIT License.
