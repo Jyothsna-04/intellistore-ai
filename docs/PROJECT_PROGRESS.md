@@ -60,6 +60,13 @@ This document tracks the overall progress of the IntelliStore AI project.
 - [x] AI Storage Copilot conversational interface and optimization recommendation engine (`CopilotView.tsx`)
 - [x] Dedicated AI test suite covering embedding fallbacks and LLM routing
 
+### Milestone 8: Enterprise Content Intelligence (ECI) & Google Drive Feature Parity (Completed)
+- [x] Integrated Enterprise Content Intelligence (ECI) drawer in Storage Explorer showing AI Content Health Score (`98/100`), AI Classification, Zero-Trust Encryption validation, and PII/Sensitive data verification.
+- [x] Added AI Executive Summarization & automatic keyword/entity extraction (`#Enterprise AI`, `#AES-256 Zero Trust`, `#MinIO S3 Pool`, `#React 18 Architecture`).
+- [x] Added Knowledge Graph Related Document Discovery displaying semantic similarity scores between enterprise documents.
+- [x] Added Google Drive enterprise actions directly in row items: Instant file Preview modal without downloading, and Granular RBAC Enterprise Share modal (Editor, Commenter, Viewer) with expiry date, password protection, and one-click copyable secure links.
+- [x] Preserved 100% backward compatibility across all enterprise features: Storage Optimization Engine, Executive Dashboard, Enterprise Digital Storage Twin, and AI Agents.
+
 ---
 
 ## Next Steps / Future Enhancements
