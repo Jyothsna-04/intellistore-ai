@@ -1,4 +1,4 @@
-# IntelliStore AI ⚡ — Enterprise Storage Optimizer Platform powered by Agentic AI
+# IntelliStore AI ⚡ — Enterprise Storage Optimization Platform powered by Agentic AI
 
 An autonomous **Agentic AI** Enterprise Storage Optimization Platform powered by a LangGraph multi-agent supervisor system that continuously analyzes files, optimizes storage tiers, reduces cloud costs, secures organizational data, and delivers instant HTML email alerts via **Resend**.
 
