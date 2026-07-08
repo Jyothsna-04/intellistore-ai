@@ -56,6 +56,7 @@ function AppShell() {
         <Navbar
           onSearchClick={() => handleNavigate('search')}
           onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          onNavigate={handleNavigate}
         />
 
         <main className="flex-1 overflow-y-auto relative z-0">

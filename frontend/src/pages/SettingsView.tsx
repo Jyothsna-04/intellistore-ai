@@ -29,8 +29,9 @@ export const SettingsView: React.FC = () => {
     }, 600);
   };
 
-  const fullName = user ? `${user.firstName} ${user.lastName}`.trim() : 'Administrator';
-  const roleDisplay = user?.roles?.length ? user.roles.join(', ') : 'ENTERPRISE_ADMIN';
+  const fullName = user ? `${user.firstName} ${user.lastName}`.trim() : 'Jyothsna Admin';
+  const isAdminAccount = user?.email?.toLowerCase().includes('admin') || user?.roles?.includes('ROLE_ADMIN') || true;
+  const roleDisplay = isAdminAccount ? 'ROLE_ADMIN (Enterprise Administrator)' : user?.roles?.join(', ');
 
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-6 animate-in fade-in duration-300">
