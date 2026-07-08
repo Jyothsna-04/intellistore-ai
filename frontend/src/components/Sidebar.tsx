@@ -14,8 +14,10 @@ import {
   HardDrive,
   Database,
   CloudLightning,
-  Activity
+  Activity,
+  ShieldAlert
 } from 'lucide-react';
+import { useAuth } from '../lib/hooks/useAuth';
 
 interface SidebarProps {
   activeTab: string;
@@ -43,6 +45,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isOpen = true, 
   onClose 
 }) => {
+  const { user } = useAuth();
+  const isAdmin = user?.email?.toLowerCase() === 'jyothsnrbipandu@gmail.com';
+
   const navGroups: NavGroup[] = [
     {
       title: 'WORKSPACE',
@@ -65,6 +70,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       title: 'ENTERPRISE GOVERNANCE',
       items: [
+        ...(isAdmin ? [{
+          id: 'admin-portal',
+          label: 'Admin Portal (Logs & Users)',
+          icon: ShieldAlert,
+          badge: 'ADMIN',
+          badgeColor: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30'
+        }] : []),
         { id: 'analytics', label: 'Analytics & Billing', icon: BarChart3 },
         { id: 'security', label: 'Security & ClamAV', icon: ShieldCheck, badge: 'Safe', badgeColor: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' },
         { id: 'activity', label: 'Activity Center', icon: Activity },

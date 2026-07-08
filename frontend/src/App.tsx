@@ -12,6 +12,7 @@ import { AnalyticsView } from './pages/AnalyticsView';
 import { SecurityView } from './pages/SecurityView';
 import { SettingsView } from './pages/SettingsView';
 import { ActivityCenterView } from './pages/ActivityCenterView';
+import { AdminPortalView } from './pages/AdminPortalView';
 import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import './index.css';
@@ -77,9 +78,10 @@ function AppShell() {
           )}
 
           {activeTab === 'analytics'  && <AnalyticsView />}
-          {activeTab === 'security'   && <SecurityView />}
-          {activeTab === 'settings'   && <SettingsView />}
-          {activeTab === 'activity'   && <ActivityCenterView />}
+          {activeTab === 'security'     && <SecurityView />}
+          {activeTab === 'settings'     && <SettingsView />}
+          {activeTab === 'admin-portal' && <AdminPortalView />}
+          {activeTab === 'activity'     && <ActivityCenterView />}
         </main>
       </div>
     </div>

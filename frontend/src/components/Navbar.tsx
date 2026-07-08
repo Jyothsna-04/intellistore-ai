@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Bell, ShieldCheck, Sparkles, Sun, Moon, Menu, ChevronDown, User, LogOut, Settings as SettingsIcon } from 'lucide-react';
+import { Search, Bell, ShieldCheck, Sparkles, Sun, Moon, Menu, ChevronDown, LogOut, Settings as SettingsIcon } from 'lucide-react';
 import { useAuth } from '../lib/hooks/useAuth';
 
 interface NavbarProps {
@@ -143,16 +143,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchClick, onMenuClick, onNa
               </div>
 
               <div className="py-1">
-                <button 
-                  onClick={() => {
-                    setShowProfileMenu(false);
-                    onNavigate?.('settings');
-                  }}
-                  className="w-full px-4 py-2 text-left text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 flex items-center gap-2.5 cursor-pointer"
-                >
-                  <User className="w-3.5 h-3.5 text-slate-400" />
-                  Account Profile
-                </button>
+                {user?.email?.toLowerCase() === 'jyothsnrbipandu@gmail.com' && (
+                  <button 
+                    onClick={() => {
+                      setShowProfileMenu(false);
+                      onNavigate?.('admin-portal');
+                    }}
+                    className="w-full px-4 py-2 text-left text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 flex items-center gap-2.5 cursor-pointer"
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
+                    Admin Portal & User Logs
+                  </button>
+                )}
                 <button 
                   onClick={() => {
                     setShowProfileMenu(false);
@@ -161,7 +163,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchClick, onMenuClick, onNa
                   className="w-full px-4 py-2 text-left text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 flex items-center gap-2.5 cursor-pointer"
                 >
                   <SettingsIcon className="w-3.5 h-3.5 text-slate-400" />
-                  Organization Settings
+                  Settings
                 </button>
               </div>
 
