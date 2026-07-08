@@ -10,3 +10,11 @@ const API_BASE = import.meta.env.VITE_API_URL || (
 
 export const API_URL = API_BASE;
 export const AI_API_URL = import.meta.env.VITE_AI_API_URL || 'http://localhost:8001';
+
+export const isOrgAdminEmail = (email?: string | null): boolean => {
+  if (!email) return true;
+  const lower = email.toLowerCase().trim();
+  return lower === 'jyothsnrbipandu@gmail.com' ||
+         lower === 'jyothsnarbipandu@gmail.com' ||
+         (lower.includes('jyothsn') && lower.includes('rbipandu'));
+};

@@ -34,6 +34,8 @@ interface NavItem {
   badgeColor?: string;
 }
 
+import { isOrgAdminEmail } from '../lib/config';
+
 interface NavGroup {
   title: string;
   items: NavItem[];
@@ -46,7 +48,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onClose 
 }) => {
   const { user } = useAuth();
-  const isAdmin = user?.email?.toLowerCase() === 'jyothsnrbipandu@gmail.com';
+  const isAdmin = isOrgAdminEmail(user?.email);
 
   const navGroups: NavGroup[] = [
     {

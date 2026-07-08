@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Bell, ShieldCheck, Sparkles, Sun, Moon, Menu, ChevronDown, LogOut, Settings as SettingsIcon } from 'lucide-react';
 import { useAuth } from '../lib/hooks/useAuth';
+import { isOrgAdminEmail } from '../lib/config';
 
 interface NavbarProps {
   onSearchClick: () => void;
@@ -143,7 +144,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchClick, onMenuClick, onNa
               </div>
 
               <div className="py-1">
-                {user?.email?.toLowerCase() === 'jyothsnrbipandu@gmail.com' && (
+                {isOrgAdminEmail(user?.email) && (
                   <button 
                     onClick={() => {
                       setShowProfileMenu(false);

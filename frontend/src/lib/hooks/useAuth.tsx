@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import apiClient, { extractData } from '../apiClient';
 import { queryClient } from '../queryClient';
+import { isOrgAdminEmail } from '../config';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 export interface AuthUser {
@@ -43,7 +44,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const stored = localStorage.getItem('intellistore_user');
       if (!stored) return null;
       const parsed = JSON.parse(stored);
-      if (parsed?.email?.toLowerCase() === 'jyothsnrbipandu@gmail.com') {
+      if (isOrgAdminEmail(parsed?.email)) {
         parsed.roles = ['ROLE_ADMIN'];
       } else if (parsed) {
         parsed.roles = ['ROLE_USER'];
@@ -67,7 +68,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const response = await apiClient.post('/api/auth/login', { email, password });
       const data = extractData<any>(response);
 
-      const isAdminEmail = email.toLowerCase() === 'jyothsnrbipandu@gmail.com';
+      const isAdminEmail = isOrgAdminEmail(email);
       const authUser: AuthUser = {
         id:                data.userId || data.id || 'u-1',
         email:             data.email || email,
@@ -85,7 +86,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setUser(authUser);
     } catch (err: any) {
       // Graceful fallback if backend is cold-starting or offline so user login succeeds
-      const isAdminEmail = email.toLowerCase() === 'jyothsnrbipandu@gmail.com';
+      const isAdminEmail = isOrgAdminEmail(email);
       const fallbackUser: AuthUser = {
         id: 'u-live-' + Math.random().toString(36).substring(2, 9),
         email: email,
@@ -116,7 +117,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const response = await apiClient.post('/api/auth/register', payload);
       const result = extractData<any>(response);
 
-      const isAdminEmail = data.email.toLowerCase() === 'jyothsnrbipandu@gmail.com';
+      const isAdminEmail = isOrgAdminEmail(data.email);
       const authUser: AuthUser = {
         id:                result.userId || result.id || 'u-new',
         email:             data.email,
@@ -134,7 +135,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setUser(authUser);
     } catch (err: any) {
       // Graceful fallback if backend is cold-starting or offline so registration succeeds
-      const isAdminEmail = data.email.toLowerCase() === 'jyothsnrbipandu@gmail.com';
+      const isAdminEmail = isOrgAdminEmail(data.email);
       const authUser: AuthUser = {
         id: 'u-live-' + Math.random().toString(36).substring(2, 9),
         email: data.email,

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, Shield, Cloud, Save, User, Check, Loader2 } from 'lucide-react';
 import { useAuth } from '../lib/hooks/useAuth';
+import { isOrgAdminEmail } from '../lib/config';
 
 export const SettingsView: React.FC = () => {
   const { user } = useAuth();
@@ -9,12 +10,15 @@ export const SettingsView: React.FC = () => {
 
   // Load preferences from localStorage or default
   const [preferences, setPreferences] = useState(() => {
-    const savedPrefs = localStorage.getItem('intellistore_user_prefs');
-    return savedPrefs ? JSON.parse(savedPrefs) : {
-      primaryModel: 'Llama-3-70B-Instruct (Render AI Hub)',
-      requireEncryption: true,
-      blockPendingScan: true,
-      autoRevokeRedis: true
+    try {
+      const stored = localStorage.getItem('intellistore_user_prefs');
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    return {
+      autoSync: true,
+      deduplicationEnabled: true,
+      aiIndexLevel: 'DEEP_SEMANTIC',
+      encryptionTier: 'AES_256_GCM'
     };
   });
 
@@ -30,7 +34,7 @@ export const SettingsView: React.FC = () => {
   };
 
   const fullName = user ? `${user.firstName} ${user.lastName}`.trim() : 'Jyothsna Admin';
-  const isAdminAccount = user?.email?.toLowerCase() === 'jyothsnrbipandu@gmail.com' || (!user && true);
+  const isAdminAccount = isOrgAdminEmail(user?.email);
   const roleDisplay = isAdminAccount ? 'ROLE_ADMIN (Enterprise Administrator)' : 'ROLE_USER (Enterprise Standard User)';
 
   return (
