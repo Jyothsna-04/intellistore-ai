@@ -22,40 +22,15 @@ An autonomous **Agentic AI** Enterprise Storage Optimization Platform powered by
 
 ## 🤖 Agentic AI Autonomous Workflow
 
-IntelliStore AI replaces static storage policies with an autonomous **LangGraph Multi-Agent Supervisor** loop:
+IntelliStore AI replaces passive cloud storage with an autonomous **LangGraph Multi-Agent Supervisor** that continuously audits and optimizes enterprise storage:
 
-```
-[Storage Events / File Uploads]
-            │
-            ▼
-┌────────────────────────────────────────────────────────┐
-│     1. Telemetry & Metadata Collector Agent            │
-│     Monitors file access telemetry, size & duplicates  │
-└───────────────────────────┬────────────────────────────┘
-                            │
-                            ▼
-┌────────────────────────────────────────────────────────┐
-│     2. LangGraph Supervisor Orchestration              │
-│     Coordinates Heuristic, Semantic & Security Agents  │
-└───────────────────────────┬────────────────────────────┘
-                            │
-                            ▼
-┌────────────────────────────────────────────────────────┐
-│     3. Explainable AI (XAI) Recommendation Engine      │
-│     Calculates ROI, proposes S3 cold archive tiering   │
-└───────────────────────────┬────────────────────────────┘
-                            │
-                            ▼
-┌────────────────────────────────────────────────────────┐
-│     4. Instant HTML Notifications (Resend API)         │
-│     Delivers audit alerts & recommendations via email  │
-└────────────────────────────────────────────────────────┘
-```
-
-1. **Continuous Telemetry**: The system continuously tracks access patterns, file ages, duplicate hashes, and storage pools.
-2. **Multi-Agent Evaluation**: The LangGraph Supervisor delegates analysis to specialized sub-agents (Duplicate Detection, Access Heuristics, Cost Impact, and Compliance).
-3. **Autonomous Remediation & XAI**: Produces explainable recommendations with financial impact calculations and rollback paths before moving cold files to decentralized Filebase S3 storage.
-4. **Real-time Notifications**: Triggers immediate HTML email alerts via **Resend** to keep administrators and users informed.
+1. **🔍 Scan & Telemetry**: AI agents continuously monitor file access frequency, duplicate metadata, and storage growth across PostgreSQL and Filebase S3.
+2. **🧠 Supervisor Evaluation**: The LangGraph Supervisor orchestrates specialized agents (FinOps, Deduplication, Security, Compliance) to evaluate cost inefficiencies and security risks.
+3. **💡 Actionable Recommendation**: Every AI recommendation answers three mandatory enterprise questions:
+   - *What problem exists?* (e.g., untouched duplicate files consuming Hot NVMe storage)
+   - *What action should be taken?* (e.g., migrate to cold Filebase S3 archive or deduplicate)
+   - *What is the financial impact?* (e.g., immediate reduction of $180/month with 100% rollback guarantee)
+4. **⚡ Automated Execution & Alerting**: Approved optimizations execute securely, and users receive real-time alerts via the **Resend** email engine.
 
 ---
 
