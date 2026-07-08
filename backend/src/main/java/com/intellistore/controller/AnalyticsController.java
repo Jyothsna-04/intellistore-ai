@@ -20,7 +20,7 @@ public class AnalyticsController {
     }
 
     @GetMapping("/dashboard")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<AnalyticsDto>> getDashboard() {
         AnalyticsDto analytics = analyticsService.getDashboardAnalytics();
         return ResponseEntity.ok(ApiResponse.success(analytics, "Analytics dashboard data retrieved"));

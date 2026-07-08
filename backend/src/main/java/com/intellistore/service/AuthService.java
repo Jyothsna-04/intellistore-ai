@@ -102,8 +102,9 @@ public class AuthService {
                 .build();
 
         Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName(RoleName.ROLE_EMPLOYEE)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+        Role userRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
+                .orElseGet(() -> roleRepository.findByName(RoleName.ROLE_EMPLOYEE)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found.")));
         roles.add(userRole);
 
         user.setRoles(roles);
