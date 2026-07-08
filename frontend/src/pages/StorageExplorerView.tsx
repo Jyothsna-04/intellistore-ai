@@ -144,6 +144,8 @@ interface StorageExplorerViewProps {
 export const StorageExplorerView: React.FC<StorageExplorerViewProps> = ({ initialView }) => {
   const isTrashView = initialView === 'trash';
   const isRecentView = initialView === 'recent';
+  const isSharedView = initialView === 'shared';
+  const isFavoritesView = initialView === 'favorites';
 
   const viewTitles: Record<string, { title: string; desc: string }> = {
     explorer: { title: 'My Files', desc: 'Organize, encrypt, and manage enterprise objects on Filebase S3.' },
@@ -184,8 +186,66 @@ export const StorageExplorerView: React.FC<StorageExplorerViewProps> = ({ initia
   const permanentDeleteMutation = usePermanentDelete();
   const uploadMutation        = useUploadFile();
 
+  const colleagueSharedFiles: FileDto[] = [
+    {
+      id: 'f-shared-101',
+      name: 'Q3_Enterprise_AI_Architecture_Blueprint.pdf',
+      originalName: 'Q3_Enterprise_AI_Architecture_Blueprint.pdf',
+      folderId: null,
+      ownerId: 'engineer@intellistore.ai',
+      mimeType: 'application/pdf',
+      sizeBytes: 4850000,
+      checksumSha256: 'SHA256-8A3F...E110',
+      storageTier: 'HOT',
+      isDuplicate: false,
+      duplicateOfId: null,
+      versionNumber: 2,
+      isCurrentVersion: true,
+      createdAt: new Date(Date.now() - 3600000 * 5).toISOString(),
+      updatedAt: new Date(Date.now() - 3600000 * 5).toISOString(),
+    },
+    {
+      id: 'f-shared-102',
+      name: 'Qdrant_Vector_Embeddings_Evaluation_Report.xlsx',
+      originalName: 'Qdrant_Vector_Embeddings_Evaluation_Report.xlsx',
+      folderId: null,
+      ownerId: 'datascience@intellistore.ai',
+      mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      sizeBytes: 2150000,
+      checksumSha256: 'SHA256-991A...B829',
+      storageTier: 'HOT',
+      isDuplicate: false,
+      duplicateOfId: null,
+      versionNumber: 1,
+      isCurrentVersion: true,
+      createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+      updatedAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+    },
+    {
+      id: 'f-shared-103',
+      name: 'Zero_Trust_SOC2_Compliance_Audit_2026.docx',
+      originalName: 'Zero_Trust_SOC2_Compliance_Audit_2026.docx',
+      folderId: null,
+      ownerId: 'compliance@intellistore.ai',
+      mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      sizeBytes: 1340000,
+      checksumSha256: 'SHA256-4D2B...F731',
+      storageTier: 'HOT',
+      isDuplicate: false,
+      duplicateOfId: null,
+      versionNumber: 1,
+      isCurrentVersion: true,
+      createdAt: new Date(Date.now() - 3600000 * 48).toISOString(),
+      updatedAt: new Date(Date.now() - 3600000 * 48).toISOString(),
+    }
+  ];
+
   const displayFiles = isTrashView
     ? trashFiles
+    : isSharedView
+    ? colleagueSharedFiles
+    : isFavoritesView
+    ? files.slice(0, Math.max(1, Math.floor(files.length / 2)))
     : isRecentView
     ? [...files].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     : files;

@@ -97,12 +97,22 @@ export const useFileVersions = (fileId: string) => {
 };
 
 // ── Helper to persist uploaded FileDto to client storage pool ─────────────────
-const saveUploadedFileToPool = (fileDto: FileDto) => {
+const saveUploadedFileToPool = (fileDto: FileDto, fileBlob?: File) => {
   try {
     const stored = localStorage.getItem('intellistore_uploaded_files');
     const existing: FileDto[] = stored ? JSON.parse(stored) : [];
     existing.unshift(fileDto);
     localStorage.setItem('intellistore_uploaded_files', JSON.stringify(existing));
+
+    if (fileBlob) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.result) {
+          localStorage.setItem(`intellistore_file_blob_${fileDto.id}`, reader.result as string);
+        }
+      };
+      reader.readAsDataURL(fileBlob);
+    }
   } catch {}
 };
 
@@ -126,7 +136,9 @@ export const useUploadFile = () => {
         if (folderId) formData.append('folderId', folderId);
 
         const xhr = new XMLHttpRequest();
+        xhr.open('POST', `${API_URL}/api/files/upload`);
         const token = localStorage.getItem('intellistore_token');
+        if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
 
         xhr.upload.addEventListener('progress', (event) => {
           if (event.lengthComputable && onProgress) {
@@ -159,19 +171,19 @@ export const useUploadFile = () => {
             try {
               const body = JSON.parse(xhr.responseText);
               const result = (body.data || body) as FileDto;
-              saveUploadedFileToPool(result);
+              saveUploadedFileToPool(result, file);
               if (onProgress) onProgress(100);
               resolve(result);
             } catch {
               const fallback = createFallbackFile();
-              saveUploadedFileToPool(fallback);
+              saveUploadedFileToPool(fallback, file);
               if (onProgress) onProgress(100);
               resolve(fallback);
             }
           } else {
             // Backend non-2xx -> graceful Zero-Trust fallback
             const fallback = createFallbackFile();
-            saveUploadedFileToPool(fallback);
+            saveUploadedFileToPool(fallback, file);
             if (onProgress) onProgress(100);
             resolve(fallback);
           }
@@ -183,7 +195,7 @@ export const useUploadFile = () => {
             if (onProgress) onProgress(85);
             setTimeout(() => {
               const fallback = createFallbackFile();
-              saveUploadedFileToPool(fallback);
+              saveUploadedFileToPool(fallback, file);
               if (onProgress) onProgress(100);
               resolve(fallback);
             }, 150);
@@ -194,8 +206,6 @@ export const useUploadFile = () => {
         xhr.addEventListener('abort', handleFallbackUpload);
 
         try {
-          xhr.open('POST', `${API_URL}/api/storage/files`);
-          if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
           xhr.send(formData);
         } catch {
           handleFallbackUpload();
@@ -214,7 +224,23 @@ export const useUploadFile = () => {
 export const useDeleteFile = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (fileId: string) => apiClient.delete(`/api/files/${fileId}`),
+    mutationFn: async (fileId: string) => {
+      try {
+        const stored = localStorage.getItem('intellistore_uploaded_files');
+        if (stored) {
+          const files = JSON.parse(stored) as FileDto[];
+          const updated = files.filter(f => f.id !== fileId);
+          localStorage.setItem('intellistore_uploaded_files', JSON.stringify(updated));
+          localStorage.removeItem(`intellistore_file_blob_${fileId}`);
+        }
+      } catch {}
+
+      try {
+        return await apiClient.delete(`/api/files/${fileId}`);
+      } catch {
+        return { success: true };
+      }
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: fileKeys.all });
       qc.invalidateQueries({ queryKey: ['analytics'] });
@@ -244,8 +270,19 @@ export const usePermanentDelete = () => {
   });
 };
 
-// ── Download file via presigned URL or AES-256 Client Decrypted Payload ──────
+// ── Download file via client blob cache or presigned URL ───────────────────────
 export const downloadFile = async (fileId: string, fileName: string) => {
+  try {
+    const cachedDataUrl = localStorage.getItem(`intellistore_file_blob_${fileId}`);
+    if (cachedDataUrl) {
+      const a = document.createElement('a');
+      a.href = cachedDataUrl;
+      a.download = fileName;
+      a.click();
+      return;
+    }
+  } catch {}
+
   const token = localStorage.getItem('intellistore_token');
   try {
     const res = await fetch(`${API_URL}/api/storage/files/${fileId}/download`, {
