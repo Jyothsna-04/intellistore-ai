@@ -88,7 +88,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsLoading(true);
     setError(null);
     try {
-      const response = await apiClient.post('/api/auth/register', data);
+      const payload = {
+        ...data,
+        fullName: `${data.firstName} ${data.lastName}`.trim(),
+      };
+      const response = await apiClient.post('/api/auth/register', payload);
       const result = extractData<any>(response);
 
       const authUser: AuthUser = {
